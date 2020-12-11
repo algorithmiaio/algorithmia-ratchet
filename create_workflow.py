@@ -69,7 +69,7 @@ def update_algorithm(algo, password, cluster_url, local_code_path, working_direc
     destination_username = algo.username
     templatable_username = "<user>"
     repo_path = f"{working_directory}/{destination_algorithm_name}"
-    git_path = f"https://{algo.username}:{password}@git.{cluster_url.split('https://api')[-1]}/git/{destination_username}/{destination_algorithm_name}.git"
+    git_path = f"https://{algo.username}:{password}@git.{cluster_url.split('https://api.')[-1]}/git/{destination_username}/{destination_algorithm_name}.git"
     os.makedirs(source_path, exist_ok=True)
     os.makedirs(repo_path, exist_ok=True)
 
