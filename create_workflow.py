@@ -22,13 +22,13 @@ def initialize_algorithm(user, algoname, mode, destination_client: Client):
     except Exception:
         print(f"algorithm {user}/{algoname} doesn't exist, creating...")
         if mode == "python3":
-            environment = "7498490e-90fe-4b8e-b65d-3ebf3ea6c5cb"
+            environment = "4beb6189-3e18-4a7a-a466-473bebe68a9f"
         elif mode == "python2":
-            environment = "e9088b81-b781-4df3-8cda-c064f607244b"
+            environment = "f7ed7c9b-d205-48ef-9ddf-61880b96c1f4"
         elif mode == "pytorch":
-            environment = "f825234b-e2c4-4a61-83a6-74378514dcf0"
+            environment = "5b027084-5fa7-431a-bdbd-f4f8eefc6ae1"
         elif mode == "tensorflow":
-            environment = "440abf71-e420-468d-8779-21cf1313a931"
+            environment = "d6110155-1452-4a62-bd51-28d099ba51fc"
         else:
             raise Exception("mode is not currently supported")
 
@@ -63,13 +63,13 @@ def migrate_datafiles(algo, data_file_paths, source_client, destination_client, 
         print(f"{collection_path} already exists, assuming datafiles are correct; skipping migration...")
 
 
-def update_algorithm(algo, password, local_code_path, working_directory):
+def update_algorithm(algo, password, cluster_url, local_code_path, working_directory):
     source_path = f"{working_directory}/source"
     destination_algorithm_name = algo.algoname
     destination_username = algo.username
     templatable_username = "<user>"
     repo_path = f"{working_directory}/{destination_algorithm_name}"
-    git_path = f"https://{algo.username}:{password}@git.algorithmia.com/git/{destination_username}/{destination_algorithm_name}.git"
+    git_path = f"https://{algo.username}:{password}@git.{cluster_url.split('https://api')[-1]}/git/{destination_username}/{destination_algorithm_name}.git"
     os.makedirs(source_path, exist_ok=True)
     os.makedirs(repo_path, exist_ok=True)
 
@@ -97,6 +97,7 @@ def update_algorithm(algo, password, local_code_path, working_directory):
     finally:
         rmtree(working_directory)
         return algo
+
 
 def algorithm_test(algo, payload):
     try:
@@ -140,7 +141,7 @@ def create_workflow(workflow_name, artifact_client, deploy_client, username, pas
         local_code_zip = artifact_client.file(code_path).getFile().name
         algo_object = initialize_algorithm(username, algorithm_name, language, deploy_client)
         migrate_datafiles(algo_object, data_file_paths, artifact_client, deploy_client, WORKING_DIR)
-        update_algorithm(algo_object, password, local_code_zip, WORKING_DIR)
+        update_algorithm(algo_object, password, deploy_client.apiAddress, local_code_zip, WORKING_DIR)
         algorithm_test(algo_object, test_payload)
 
 
