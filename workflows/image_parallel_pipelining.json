@@ -1,0 +1,62 @@
+{
+  "algorithms": [
+    {
+      "name": "SmartImageDownloader",
+      "code": "data://quality/artifacts/smartimagedownloader.tar.gz",
+      "language": "python2",
+      "data_files": [
+        "data://quality/artifacts/willow_example.jpeg"
+      ],
+      "test_payload": {
+        "image": "data://.my/smartimagedownloader/willow_example.jpeg",
+        "resize": 600
+      }
+    },
+    {
+      "name": "BoundingBoxOnImage",
+      "code": "data://quality/artifacts/boundingboxonimage.tar.gz",
+      "language": "python3",
+      "data_files": [
+        "data://quality/artifacts/willow_example.jpeg"
+      ],
+      "test_payload": {
+        "imageUrl": "data://.my/boundingboxonimage/willow_example.jpeg",
+        "imageSaveUrl": "data://.algo/temp/willow.jpeg",
+        "boundingBoxes": [
+          {
+            "coordinates": {
+              "left": 1,
+              "right": 330,
+              "top": 1,
+              "bottom": 300
+            },
+            "textObjects": [
+              {
+                "text": "Willow",
+                "position": "bottom"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "DeepFashion",
+      "code": "data://quality/artifacts/deepfashion.tar.gz",
+      "data_files": [
+        "data://quality/artifacts/ssd_v1.1.pb",
+        "data://quality/artifacts/frozen_inference_graph.pb",
+        "data://quality/artifacts/label_map.pbtxt",
+        "data://quality/artifacts/willow_example.jpeg"
+      ],
+      "language": "tensorflow",
+      "test_payload": {
+        "image": [
+          "data://.my/boundingboxonimage/willow_example.jpeg"
+        ],
+        "model": "small",
+        "tags_only": false
+      }
+    }
+  ]
+}
