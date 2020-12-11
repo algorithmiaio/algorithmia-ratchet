@@ -28,7 +28,7 @@ def initialize_algorithm(user, algoname, mode, destination_client: Client):
         elif mode == "pytorch":
             environment = "5b027084-5fa7-431a-bdbd-f4f8eefc6ae1"
         elif mode == "tensorflow":
-            environment = "d6110155-1452-4a62-bd51-28d099ba51fc"
+            environment = "e9c1291c-1295-41b9-a4c5-30f7f44920aa"
         else:
             raise Exception("mode is not currently supported")
 
