@@ -1,4 +1,25 @@
 {
+  "test_info": {
+    "entrypoint":  "qa_parallel_pipelining",
+    "tests": [
+      {
+        "name": "100 calls",
+        "payload": 100,
+        "timeout": 600
+      },
+      {
+        "name": "250 calls",
+        "payload": 250,
+        "timeout": 600
+      },
+      {
+        "name": "500 calls",
+        "payload": 500,
+        "timeout": 600
+      }
+    ]
+  },
+  "algorithm_owner": "zeryx",
   "algorithms": [
     {
       "name": "SmartImageDownloader",
@@ -49,14 +70,15 @@
         "data://quality/artifacts/label_map.pbtxt",
         "data://quality/artifacts/willow_example.jpeg"
       ],
-      "language": "tensorflow",
-      "test_payload": {
-        "image": [
-          "data://.my/boundingboxonimage/willow_example.jpeg"
-        ],
-        "model": "small",
-        "tags_only": false
-      }
+      "language": "tensorflow-1.14",
+      "test_payload": "data://.my/boundingboxonimage/willow_example.jpeg"
+    },
+    {
+      "name": "qa_parallel_pipelining",
+      "code": "data://quality/artifacts/parallelpiplining.tar.gz",
+      "data_files": [],
+      "language": "python3",
+      "test_payload": 1
     }
   ]
 }
