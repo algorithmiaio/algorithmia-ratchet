@@ -15,13 +15,14 @@ WORKING_DIR = "/tmp/QA_TEMPLATE_WORKDIR"
 
 
 def initialize_algorithm(algoname, mode, destination_client: Client):
-    algo = destination_client.algo(f".my/{algoname}")
+    username = next(destination_client.dir("").list()).path
+    algo = destination_client.algo(f"algo://{username}/{algoname}")
     try:
         _ = algo.info()
-        print(f"algorithm .my/{algoname} already exists; skipping initialization...")
+        print(f"algorithm {username}/{algoname} already exists; skipping initialization...")
         return algo
     except Exception:
-        print(f"algorithm .my/{algoname} doesn't exist, creating...")
+        print(f"algorithm {username}/{algoname} doesn't exist, creating...")
         if mode == "python3":
             environment = "4beb6189-3e18-4a7a-a466-473bebe68a9f"
         elif mode == "python2":
