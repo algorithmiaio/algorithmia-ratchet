@@ -27,6 +27,9 @@ here is a list of all of them and what they refer to:
     * Must be management capable, ability to read/write and create data collections, and have unrestricted algorithm access
 * `DESTINATION_CA_CERT`
     * Same as the optional source ca cert, optional - but if the destination cluster requires one; can be provided here
+* `DESTINATION_AEMS_MASTER`
+    * The name of the master of which AEMS images are pulled from, can be either `test` or `prod` today
+    * Defaults to `prod`
 * `WORKFLOW_NAME`
     * The name of the workflow file you wish to execute. For a quick example check out [image_parallel_processing.json](workflows/image_parallel_pipelining.json)
     
