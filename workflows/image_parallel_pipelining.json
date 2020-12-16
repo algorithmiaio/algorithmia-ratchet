@@ -1,4 +1,7 @@
 {
+  "source_info": {
+    "cluster_address": "https://api.algorithmia.com"
+  },
   "test_info": {
     "entrypoint":  "qa_parallel_pipelining",
     "tests": [
@@ -19,14 +22,13 @@
       }
     ]
   },
-  "algorithm_owner": "zeryx",
   "algorithms": [
     {
       "name": "SmartImageDownloader",
-      "code": "data://quality/artifacts/smartimagedownloader.tar.gz",
+      "code": "data://.my/artifacts/smartimagedownloader.tar.gz",
       "language": "python2",
       "data_files": [
-        "data://quality/artifacts/willow_example.jpeg"
+        "data://.my/artifacts/willow_example.jpeg"
       ],
       "test_payload": {
         "image": "data://.my/smartimagedownloader/willow_example.jpeg",
@@ -35,10 +37,10 @@
     },
     {
       "name": "BoundingBoxOnImage",
-      "code": "data://quality/artifacts/boundingboxonimage.tar.gz",
+      "code": "data://.my/artifacts/boundingboxonimage.tar.gz",
       "language": "python3",
       "data_files": [
-        "data://quality/artifacts/willow_example.jpeg"
+        "data://.my/artifacts/willow_example.jpeg"
       ],
       "test_payload": {
         "imageUrl": "data://.my/boundingboxonimage/willow_example.jpeg",
@@ -63,19 +65,19 @@
     },
     {
       "name": "DeepFashion",
-      "code": "data://quality/artifacts/deepfashion.tar.gz",
+      "code": "data://.my/artifacts/deepfashion.tar.gz",
       "data_files": [
-        "data://quality/artifacts/ssd_v1.1.pb",
-        "data://quality/artifacts/frozen_inference_graph.pb",
-        "data://quality/artifacts/label_map.pbtxt",
-        "data://quality/artifacts/willow_example.jpeg"
+        "data://.my/artifacts/ssd_v1.1.pb",
+        "data://.my/artifacts/frozen_inference_graph.pb",
+        "data://.my/artifacts/label_map.pbtxt",
+        "data://.my/artifacts/willow_example.jpeg"
       ],
       "language": "tensorflow-1.14",
       "test_payload": "data://.my/boundingboxonimage/willow_example.jpeg"
     },
     {
       "name": "qa_parallel_pipelining",
-      "code": "data://quality/artifacts/parallelpiplining.tar.gz",
+      "code": "data://.my/artifacts/parallelpiplining.tar.gz",
       "data_files": [],
       "language": "python3",
       "test_payload": 1

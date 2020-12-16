@@ -14,14 +14,14 @@ from uuid import uuid4
 WORKING_DIR = "/tmp/QA_TEMPLATE_WORKDIR"
 
 
-def initialize_algorithm(user, algoname, mode, destination_client: Client):
-    algo = destination_client.algo(f"{user}/{algoname}")
+def initialize_algorithm(algoname, mode, destination_client: Client):
+    algo = destination_client.algo(f".my/{algoname}")
     try:
         _ = algo.info()
-        print(f"algorithm {user}/{algoname} already exists; skipping initialization...")
+        print(f"algorithm .my/{algoname} already exists; skipping initialization...")
         return algo
     except Exception:
-        print(f"algorithm {user}/{algoname} doesn't exist, creating...")
+        print(f"algorithm .my/{algoname} doesn't exist, creating...")
         if mode == "python3":
             environment = "4beb6189-3e18-4a7a-a466-473bebe68a9f"
         elif mode == "python2":
@@ -161,7 +161,6 @@ def get_workflow(workflow_name):
 
 def create_workflow(workflow, source_client, destination_client):
     entrypoint_path = workflow['test_info'].get("entrypoint", None)
-    algorithm_owner = workflow['algorithm_owner']
     entrypoint = None
     for algorithm in tqdm(workflow.get("algorithms", [])):
         print("\n")
@@ -173,7 +172,7 @@ def create_workflow(workflow, source_client, destination_client):
         print("downloading code...")
         local_code_zip = source_client.file(code_path).getFile().name
         print("initializing algorithm...")
-        algo_object = initialize_algorithm(algorithm_owner, algorithm_name, language, destination_client)
+        algo_object = initialize_algorithm(algorithm_name, language, destination_client)
         print("migrating datafiles...")
         migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
         print("updating algorithm source...")
@@ -206,13 +205,15 @@ def workflow_test(algorithm, workflow):
 
 
 if __name__ == "__main__":
-    source_api_address = environ.get("SOURCE_API_ADDRESS")
     source_api_key = environ.get("SOURCE_API_KEY")
+    source_ca_cert = environ.get("SOURCE_CA_CERT", None)
     destination_api_address = environ.get("DESTINATION_API_ADDRESS")
     destination_api_key = environ.get("DESTINATION_API_KEY")
-    source_client = Algorithmia.client(api_key=source_api_key, api_address=source_api_address)
-    destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address)
-    workflow = get_workflow("image_parallel_pipelining")
+    destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
+    workflow_name = environ.get("WORKFLOW_NAME", "image_parallel_pipelining")
+    workflow = get_workflow(workflow_name)
+    source_client = Algorithmia.client(api_key=source_api_key, api_address=workflow['source_info']['cluster_address'], ca_cert=source_ca_cert)
+    destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address, ca_cert=destination_ca_cert)
     print("------- Starting Algorithm Export/Import Procedure -------")
     entrypoint_algo = create_workflow(workflow, source_client, destination_client)
     print("------- Workflow Created, initiating QA Test Procedure -------")
