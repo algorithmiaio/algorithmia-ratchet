@@ -14,11 +14,6 @@
         "name": "250 calls",
         "payload": 250,
         "timeout": 600
-      },
-      {
-        "name": "500 calls",
-        "payload": 500,
-        "timeout": 600
       }
     ]
   },
