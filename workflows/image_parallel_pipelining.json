@@ -11,9 +11,9 @@
         "timeout": 60
       },
       {
-        "name": "250 calls in 5 min",
-        "payload": 250,
-        "timeout": 600
+        "name": "100 calls in 5 min",
+        "payload": 100,
+        "timeout": 300
       }
     ]
   },
