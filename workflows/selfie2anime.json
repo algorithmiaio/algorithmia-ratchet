@@ -1,0 +1,34 @@
+{
+  "source_info": {
+    "cluster_address": "https://api.algorithmia.com"
+  },
+  "test_info": {
+    "entrypoint":  "selfie2anime",
+    "tests": [
+      {
+        "name": "3 call in 10 sec",
+        "payload": {"texts": ["Hello", "Nice to meet you", "I can not login", "It does not work"]},
+        "timeout": 10
+      },
+      {
+        "name": "12 call in 15 sec",
+        "payload": {"texts": ["Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work"]},
+        "timeout": 15
+      }
+    ]
+  },
+  "algorithms": [
+    {
+      "name": "selfie2anime",
+      "code": "data://.my/selfie2anime/selfie2anime.tar.gz",
+      "data_files": [
+        "data://.my/selfie2anime/test.model.data-00000-of-00001",
+        "data://.my/selfie2anime/test.model.index",
+        "data://.my/selfie2anime/test.model.meta",
+        "data://.my/selfie2anime/checkpoint"
+      ],
+      "language": "tensorflow-1.14",
+      "test_payload": {"in": "https://cdn.dxomark.com/wp-content/uploads/medias/post-29213/160_OnePlus7_DxOMark_Selfie-1-e1557408678866.jpg", "out":"data://.algo/temp/test.jpg"}
+    }
+  ]
+}

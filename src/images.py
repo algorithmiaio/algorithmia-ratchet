@@ -11,5 +11,6 @@ TEST_IMAGES={
     "python2": "f7ed7c9b-d205-48ef-9ddf-61880b96c1f4",
     "pytorch-1.7": "5b027084-5fa7-431a-bdbd-f4f8eefc6ae1",
     "tensorflow-1.14": "27d3d02d-1da0-4868-986e-e0c6937e7d16",
-    "tensorflow-2.3": "e9c1291c-1295-41b9-a4c5-30f7f44920aa"
+    "tensorflow-2.3": "e9c1291c-1295-41b9-a4c5-30f7f44920aa",
+    "python2-gpu": "6f57e041-54e0-4e1a-8b2f-4589bb2c06f8"
 }
