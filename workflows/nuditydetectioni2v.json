@@ -20,7 +20,6 @@
   "algorithms": [
     {
       "name": "SmartImageDownloader",
-      "code": "data://.my/artifacts/smartimagedownloader.tar.gz",
       "language": "python2",
       "data_files": [
         "data://.my/artifacts/willow_example.jpeg"

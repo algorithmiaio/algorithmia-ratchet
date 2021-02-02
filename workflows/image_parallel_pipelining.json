@@ -20,7 +20,6 @@
   "algorithms": [
     {
       "name": "SmartImageDownloader",
-      "code": "data://.my/artifacts/smartimagedownloader.tar.gz",
       "language": "python2",
       "data_files": [
         "data://.my/artifacts/willow_example.jpeg"
@@ -32,7 +31,6 @@
     },
     {
       "name": "BoundingBoxOnImage",
-      "code": "data://.my/artifacts/boundingboxonimage.tar.gz",
       "language": "python3",
       "data_files": [
         "data://.my/artifacts/willow_example.jpeg"
@@ -60,7 +58,6 @@
     },
     {
       "name": "DeepFashion",
-      "code": "data://.my/artifacts/deepfashion.tar.gz",
       "data_files": [
         "data://.my/artifacts/ssd_v1.1.pb",
         "data://.my/artifacts/frozen_inference_graph.pb",
@@ -72,7 +69,6 @@
     },
     {
       "name": "qa_parallel_pipelining",
-      "code": "data://.my/artifacts/parallelpiplining.tar.gz",
       "data_files": [],
       "language": "python3",
       "test_payload": 1

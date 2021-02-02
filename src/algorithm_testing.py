@@ -22,7 +22,8 @@ def algorithm_publish(algo, payload):
                 "release_notes": "created programmatically",
                 "sample_input": json.dumps(payload),
                 "version_type": "minor"
-            }
+            },
+            details={"label": "testing123"}
         )
         print(f"algorithm {algo.username}/{algo.algoname} published")
         return algo

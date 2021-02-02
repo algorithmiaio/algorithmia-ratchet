@@ -1,0 +1,9 @@
+# requirements.txt
+# Include python dependencies here
+
+#Example:
+#scikit-learn
+
+algorithmia>=1.0.0
+#protobuf==3.0.0b2.post1
+https://algorithmia-wheels.s3.amazonaws.com/caffe-01.05.16_b86b0aea60a_gpu-py2-none-any.whl
