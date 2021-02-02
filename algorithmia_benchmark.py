@@ -1,5 +1,4 @@
 import Algorithmia
-from tqdm import tqdm
 import json
 import tarfile
 import shutil

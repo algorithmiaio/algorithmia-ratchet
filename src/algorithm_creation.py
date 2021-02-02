@@ -80,7 +80,9 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
     try:
         publish_bake.add(".")
         publish_bake.commit(m="automatic initialization commit")
-        publish_bake.push()
+        output = publish_bake.push()
+        if output.exit_code != 0:
+            print("didn't complete properly")
     except Exception as e:
         if "Your branch is up to date with" not in str(e):
             raise e
