@@ -88,7 +88,5 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
         else:
             print(
                 f"algorithm {destination_username}/{destination_algorithm_name} is already up to date, skipping update...")
-            pass
-    finally:
-        rmtree(workspace_path)
-        return algo
+            rmtree(workspace_path)
+            return algo
