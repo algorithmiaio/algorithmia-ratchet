@@ -3,7 +3,7 @@
     "cluster_address": "https://api.algorithmia.com"
   },
   "test_info": {
-    "entrypoint":  "qa_parallel_pipelining",
+    "entrypoint":  "ParallelPipelining",
     "tests": [
       {
         "name": "10 calls in 60 sec",
