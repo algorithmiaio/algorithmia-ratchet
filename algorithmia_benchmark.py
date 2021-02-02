@@ -86,6 +86,8 @@ if __name__ == "__main__":
     destination_api_key = environ.get("DESTINATION_API_KEY")
     destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
     destination_aems_master = environ.get("DESTINATION_AEMS_MASTER", "prod")
+    if path.exists(WORKING_DIR):
+        shutil.rmtree(WORKING_DIR)
     if len(sys.argv) > 1:
         workflow_name = str(sys.argv[1])
     else:
