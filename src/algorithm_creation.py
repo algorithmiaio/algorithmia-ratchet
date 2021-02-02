@@ -72,7 +72,8 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
 
     clone_bake = sh.git.bake(C=workspace_path)
     publish_bake = sh.git.bake(C=repo_path)
-    clone_bake.clone(git_path)
+    for line in clone_bake.clone(git_path, _err_to_out=True, _iter=True, _out_bufsize=100):
+        print(line)
     sh.rm("-r", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/src", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/requirements.txt", f"{repo_path}/requirements.txt")
@@ -80,9 +81,8 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
     try:
         publish_bake.add(".")
         publish_bake.commit(m="automatic initialization commit")
-        output = publish_bake.push()
-        if output.exit_code != 0:
-            print("didn't complete properly")
+        for line in publish_bake.push(_iter=True, _err_to_out=True, _out_bufsize=100):
+            print(line)
     except Exception as e:
         if "Your branch is up to date with" not in str(e):
             raise e
