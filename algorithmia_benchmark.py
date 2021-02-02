@@ -1,7 +1,9 @@
 import Algorithmia
 from tqdm import tqdm
 import json
-from os import environ
+import tarfile
+import shutil
+from os import environ, path
 from src.algorithm_creation import initialize_algorithm, migrate_datafiles, update_algorithm
 from src.algorithm_testing import algorithm_test, algorithm_publish, call_algo
 
@@ -15,6 +17,13 @@ def get_workflow(workflow_name):
         workflow_data = json.load(f)
     return workflow_data
 
+def find_algo(algo_name, artifact_path):
+    local_path = f"algorithms/{algo_name}"
+    if path.exists(local_path):
+        shutil.copytree(local_path, artifact_path)
+        return artifact_path
+    else:
+        raise Exception(f"algorithm {algo_name} not found in local cache (algorithms)")
 
 def create_workflow(workflow, source_client, destination_aems_master, destination_client):
     entrypoint_path = workflow['test_info'].get("entrypoint", None)
@@ -22,18 +31,27 @@ def create_workflow(workflow, source_client, destination_aems_master, destinatio
     for algorithm in tqdm(workflow.get("algorithms", [])):
         print("\n")
         algorithm_name = algorithm['name']
-        code_path = algorithm['code']
+        remote_code_path = algorithm.get("code", None)
         language = algorithm['language']
         data_file_paths = algorithm['data_files']
         test_payload = algorithm['test_payload']
-        print("downloading code...")
-        local_code_zip = source_client.file(code_path).getFile().name
+        artifact_path = f"{WORKING_DIR}/source"
+        if remote_code_path:
+            print("downloading code...")
+            local_code_zip = source_client.file(remote_code_path).getFile().name
+            tar = tarfile.open(local_code_zip)
+            with tar.open(local_code_zip) as f:
+                f.extractall(path=artifact_path)
+        else:
+            print("checking for local code...")
+            find_algo(algorithm_name, artifact_path)
+
         print("initializing algorithm...")
         algo_object = initialize_algorithm(algorithm_name, language, destination_aems_master,  destination_client)
         print("migrating datafiles...")
         migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
         print("updating algorithm source...")
-        update_algorithm(algo_object, destination_client, local_code_zip, WORKING_DIR)
+        update_algorithm(algo_object, destination_client, WORKING_DIR, artifact_path)
         print("testing algorithm...")
         algorithm_test(algo_object, test_payload)
         print("publishing algorithm...")

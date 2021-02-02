@@ -1,0 +1,9 @@
+### 0.2.3
+* Added support for processing truncated images. (http://stackoverflow.com/a/23575424/1555313)
+
+### 0.2.15
+* Added support for webp images
+* Added new error codes in error exceptions.
+
+### 0.2.16
+* Added another step to check image MIME type for accurate extension detection.

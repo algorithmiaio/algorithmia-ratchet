@@ -20,7 +20,6 @@
   "algorithms": [
     {
       "name": "classification_albert",
-      "code": "data://.my/artifacts/classification_albert.tar.gz",
       "data_files": [
         "data://.my/artifacts/classification_albert_model_params.zip"
       ],
