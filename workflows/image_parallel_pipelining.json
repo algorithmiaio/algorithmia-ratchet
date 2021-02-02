@@ -68,7 +68,7 @@
       "test_payload": "data://.my/boundingboxonimage/willow_example.jpeg"
     },
     {
-      "name": "qa_parallel_pipelining",
+      "name": "ParallelPipelining",
       "data_files": [],
       "language": "python3",
       "test_payload": 1
