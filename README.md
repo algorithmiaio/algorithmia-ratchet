@@ -1,5 +1,5 @@
-# Export and Test My Algorithm
-A system to export an algorithm (or algorithms) from one cluster to another, and run a QC test against them to verify stability.
+# Algorithmia Benchmark
+A system to export an algorithm (or algorithms) from one cluster to another, and run real-life benchmark tests to ensure cluster quality and stability.
 
 ## Requirements
 As this workflow will download and then upload dependency files, if your workflow contains large dependencies it's recommended to execute this on a server (such as Deep Purple) via proxy.
