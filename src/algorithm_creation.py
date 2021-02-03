@@ -2,9 +2,7 @@
 from src.images import *
 from Algorithmia.errors import ApiError
 from uuid import uuid4
-from shutil import rmtree
 import sh
-import tarfile
 import os
 
 def initialize_algorithm(algoname, mode, destination_aems_master, destination_client):
@@ -82,7 +80,6 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
         publish_bake.add(".")
         publish_bake.commit(m="automatic initialization commit")
         publish_bake.push()
-        rmtree(artifact_path)
         return algo
     except Exception as e:
         if "Your branch is up to date with" in str(e):
@@ -90,5 +87,4 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
                 f"algorithm {destination_username}/{destination_algorithm_name} is already up to date, skipping update...")
             pass
         else:
-            rmtree(artifact_path)
             raise e
