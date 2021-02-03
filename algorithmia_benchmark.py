@@ -71,11 +71,8 @@ def workflow_test(algorithm, workflow):
         message = f"test {name} with {payload} for {algorithm.username}/{algorithm.algoname} with timeout {timeout}"
         print("starting " + message)
         result = call_algo(algorithm, payload)
-        if isinstance(result, Exception):
-            message = message + " failed."
-        else:
-            message = message + " succeeded."
-            print(result)
+        print(result)
+        message = message + " succeeded."
         print(message)
 
 

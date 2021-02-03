@@ -4,14 +4,11 @@ from time import sleep
 
 
 def call_algo(algo, payload, timeout=None):
-    try:
-        if timeout:
-            result = algo.set_options(timeout=timeout).pipe(payload).result
-        else:
-            result = algo.pipe(payload).result
-        return result
-    except Exception as e:
-        return e
+    if timeout:
+        result = algo.set_options(timeout=timeout).pipe(payload).result
+    else:
+        result = algo.pipe(payload).result
+    return result
 
 
 def algorithm_publish(algo, payload):

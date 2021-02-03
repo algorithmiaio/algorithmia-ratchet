@@ -73,7 +73,7 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
     sh.git.config("--global", "user.name", "CI")
     clone_bake = sh.git.bake(C=workspace_path)
     publish_bake = sh.git.bake(C=repo_path)
-    print(str(clone_bake.clone(git_path)))
+    clone_bake.clone(git_path)
     sh.rm("-r", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/src", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/requirements.txt", f"{repo_path}/requirements.txt")
@@ -81,15 +81,14 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
     try:
         publish_bake.add(".")
         publish_bake.commit(m="automatic initialization commit")
-        print(str(publish_bake.status()))
-        print(str(publish_bake.push()))
+        publish_bake.push()
         rmtree(artifact_path)
         return algo
     except Exception as e:
-        if "Your branch is up to date with" not in str(e):
-            raise e
-        else:
+        if "Your branch is up to date with" in str(e):
             print(
                 f"algorithm {destination_username}/{destination_algorithm_name} is already up to date, skipping update...")
-            rmtree(workspace_path)
-            return algo
+            pass
+        else:
+            rmtree(artifact_path)
+            raise e
