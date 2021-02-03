@@ -83,6 +83,8 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
         publish_bake.commit(m="automatic initialization commit")
         print(str(publish_bake.status()))
         print(str(publish_bake.push()))
+        rmtree(artifact_path)
+        return algo
     except Exception as e:
         if "Your branch is up to date with" not in str(e):
             raise e
