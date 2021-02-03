@@ -31,7 +31,6 @@
     },
     {
       "name": "NudityDetectioni2v",
-      "code": "data://.my/artifacts/nuditydetectioni2v.tar.gz",
       "data_files": [
         "data://.my/artifacts/illust2vec_tag_ver200.caffemodel",
         "data://.my/artifacts/illust2vec_tag.prototxt",
