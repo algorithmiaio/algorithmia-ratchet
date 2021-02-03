@@ -70,10 +70,9 @@ def workflow_test(algorithm, workflow):
         name = test['name']
         payload = test['payload']
         timeout = test['timeout']
-        message = f"test {name} with {payload} for {algorithm.username}/{algorithm.algoname} with timeout {timeout}"
+        message = f"test {name} for {algorithm.username}/{algorithm.algoname} with timeout {timeout}"
         print("starting " + message)
-        result = call_algo(algorithm, payload)
-        print(result)
+        _ = call_algo(algorithm, payload)
         message = message + " succeeded."
         print(message)
 
