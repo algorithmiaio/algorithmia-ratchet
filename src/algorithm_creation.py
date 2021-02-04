@@ -1,6 +1,6 @@
 
 from src.images import *
-from Algorithmia.errors import ApiError
+from src.utilities import algorithm_exists
 from uuid import uuid4
 import sh
 import os
@@ -8,13 +8,11 @@ import os
 def initialize_algorithm(algoname, mode, destination_aems_master, destination_client):
     username = next(destination_client.dir("").list()).path
     algo = destination_client.algo(f"algo://{username}/{algoname}")
-    try:
-        _ = algo.info()
+    if algorithm_exists(algo):
         print(f"algorithm {username}/{algoname} already exists; skipping initialization...")
         return algo
-    except ApiError:
+    else:
         print(f"algorithm {username}/{algoname} doesn't exist, creating...")
-
         return create_algorithm(algo, algoname, mode, destination_aems_master)
 
 

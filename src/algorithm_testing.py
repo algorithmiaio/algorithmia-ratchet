@@ -1,14 +1,8 @@
 import json
 from Algorithmia.errors import ApiError, AlgorithmException
+from src.utilities import call_algo
 from time import sleep
 
-
-def call_algo(algo, payload, timeout=None):
-    if timeout:
-        result = algo.set_options(timeout=timeout).pipe(payload).result
-    else:
-        result = algo.pipe(payload).result
-    return result
 
 
 def algorithm_publish(algo, payload):
