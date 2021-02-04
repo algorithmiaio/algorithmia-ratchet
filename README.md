@@ -1,4 +1,4 @@
-# Algorithmia Benchmark
+# Algorithmia TestBench
 A system to export an algorithm (or algorithms) from one cluster to another, and run real-life benchmark tests to ensure cluster quality and stability.
 
 ## Requirements
