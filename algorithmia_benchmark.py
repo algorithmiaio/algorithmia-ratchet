@@ -5,6 +5,7 @@ import tarfile
 import shutil
 import requests
 from src.utilities import algorithm_exists, call_algo
+from time import sleep
 import sys
 from os import environ, path, listdir
 from src.algorithm_creation import initialize_algorithm, migrate_datafiles, update_algorithm
@@ -128,6 +129,8 @@ if __name__ == "__main__":
                                             ca_cert=destination_ca_cert)
     print("----deleting algorithms-----")
     delete_workflows(workflows, destination_client)
+    print("------- waiting for algorithm caches to clear ---------")
+    sleep(15)
     print("------- Starting Algorithm Export/Import Procedure -------")
     entrypoint_algos = create_workflows(workflows, source_client, destination_aems_master, destination_client)
     print("------- Workflow Created, initiating QA Test Procedure -------")
