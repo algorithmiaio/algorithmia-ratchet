@@ -127,8 +127,8 @@ if __name__ == "__main__":
                                        ca_cert=source_ca_cert)
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
-    print("----deleting algorithms-----")
-    delete_workflows(workflows, destination_client)
+    # print("----deleting algorithms-----")
+    # delete_workflows(workflows, destination_client)
     print("------- waiting for algorithm caches to clear ---------")
     sleep(15)
     print("------- Starting Algorithm Export/Import Procedure -------")
