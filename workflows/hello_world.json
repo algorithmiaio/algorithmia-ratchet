@@ -1,0 +1,23 @@
+{
+  "source_info": {
+    "cluster_address": "https://api.algorithmia.com"
+  },
+  "test_info": {
+    "entrypoint":  "hello_world",
+    "tests": [
+      {
+        "name": "basic test",
+        "payload": "Algorithmia",
+        "timeout": 5
+      }
+    ]
+  },
+  "algorithms": [
+    {
+      "name": "hello_world",
+      "data_files": [],
+      "language": "python3",
+      "test_payload": "Algorithmia"
+    }
+  ]
+}

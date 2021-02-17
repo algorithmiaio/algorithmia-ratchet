@@ -25,7 +25,7 @@
         "data://.my/artifacts/willow_example.jpeg"
       ],
       "test_payload": {
-        "image": "data://.my/smartimagedownloader/willow_example.jpeg",
+        "image": "data://.my/<algo>/willow_example.jpeg",
         "resize": 600
       }
     },
@@ -36,7 +36,7 @@
         "data://.my/artifacts/willow_example.jpeg"
       ],
       "test_payload": {
-        "imageUrl": "data://.my/boundingboxonimage/willow_example.jpeg",
+        "imageUrl": "data://.my/<algo>/willow_example.jpeg",
         "imageSaveUrl": "data://.algo/temp/willow.jpeg",
         "boundingBoxes": [
           {
@@ -65,7 +65,7 @@
         "data://.my/artifacts/willow_example.jpeg"
       ],
       "language": "tensorflow-1.14",
-      "test_payload": "data://.my/boundingboxonimage/willow_example.jpeg"
+      "test_payload": "data://.my/<algo>/willow_example.jpeg"
     },
     {
       "name": "ParallelPipelining",

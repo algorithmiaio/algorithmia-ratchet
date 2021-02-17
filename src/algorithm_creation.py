@@ -26,7 +26,7 @@ def create_algorithm(algo, algoname, mode, aems_master):
 
     algo.create(
         details={
-            "label": f"QA - {algoname} - {str(uuid4())}",
+            "label": f"QA - {algoname}",
         },
         settings={
             "source_visibility": "closed",
@@ -55,7 +55,7 @@ def migrate_datafiles(algo, data_file_paths, source_client, destination_client, 
         print(f"{collection_path} already exists, assuming datafiles are correct; skipping migration...")
 
 
-def update_algorithm(algo, remote_client, workspace_path, artifact_path):
+def update_algorithm(algo, original_name, algorithm_pairs, remote_client, workspace_path, artifact_path):
     api_key = remote_client.apiKey
     api_address = remote_client.apiAddress
     destination_algorithm_name = algo.algoname
@@ -73,7 +73,11 @@ def update_algorithm(algo, remote_client, workspace_path, artifact_path):
     sh.rm("-r", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/src", f"{repo_path}/src")
     sh.cp("-R", f"{artifact_path}/requirements.txt", f"{repo_path}/requirements.txt")
-    sh.xargs.sed(sh.find(repo_path, "-type", "f"), i=f"s/{templatable_username}/{destination_username}/g")
+    sh.xargs.sed(sh.find(repo_path, "-not", "-path", "*/\.*", "-type", "f"), i=f"s/{templatable_username}/{destination_username}/g")
+    for template_name, new_name in algorithm_pairs:
+        sh.xargs.sed(sh.find(f"{repo_path}/src", "-not", "-path", "*/\.*", "-type", "f"), i=f"s/{template_name}/{new_name}/g")
+    sh.mv(f"{repo_path}/src/{original_name}.py", f"{repo_path}/src/{destination_algorithm_name}.py")
+    sh.mv(f"{repo_path}/src/{original_name}_test.py", f"{repo_path}/src/{destination_algorithm_name}_test.py")
     try:
         publish_bake.add(".")
         publish_bake.commit(m="automatic initialization commit")

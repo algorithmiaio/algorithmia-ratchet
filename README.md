@@ -91,3 +91,114 @@ A workflow is a json file consisting of 3 separate objects, `source_info`, `test
             * If the algorithm fails to process  your test payload, the process will return an exception, and the error message that was returned
        
             
+## How to create a workflow
+Creating a new workflow has 2 steps:
+* Create a workflow.json file in `/workflows`
+* Creating an Algorithm template (or templates) in the `/algorithms` directory
+Lets explore each of step in detail.
+
+### Workflow Creation
+First create a workflow with a useful filename, you'll use this to refer to your workflow operations.
+
+`touch workflows/hello_world.json`
+
+**some important things to note:**
+* Algorithm order matters!
+    * Make sure that you define downstream algorithms first, and walk back towards your "orchestrator" if you have one.
+    * For example, define `smartImageDownloader` first, before defining your Image Classifier that uses it.
+* All algorithm data is to be stored in the Data API
+    * It can be any collection, but the reason for this is to ensure that we can export data into closed off networks.
+    
+Lets look at a basic template and walk through the different components.
+```json
+{
+  "source_info": {
+    "cluster_address": "https://api.algorithmia.com"
+  },
+  "test_info": {
+    "entrypoint":  "hello_world",
+    "tests": [
+      {
+        "name": "basic test",
+        "payload": "Algorithmia",
+        "timeout": 10
+      }
+    ]
+  },
+  "algorithms": [
+    {
+      "name": "hello_world",
+      "data_files": [],
+      "language": "python3",
+      "test_payload": "Algorithmia"
+    }
+  ]
+}
+```
+
+#### source_info
+For the moment, this contains only the `cluster_address` algorithmia cluster api addresswhere data files are located, in the future this may be optional.
+Unless you're storing data files on a different cluster than production, please leave this as is.
+#### test_info
+This is where you define the benchmark tests for your algorithm to pass
+* `"entrypoint"` - defines which algorithm should be "called" during all tests, only one algorithm can be an entrypoint per workflow. Name must match up exactly with the name you defined in `algorithms`.
+* `"tests` - a list of tests which get run in order, each test consists of:
+    * `"name"` - the name of the test (for reporting purposes)
+    * `"payload"` - the json encoded payload to provide to your entrypoint algorithm.
+        * If you're interacting with data files, it's recommended to define them in your algorithm's `data_files` object, and to refer to them with the following schema:
+            * `"data://.my/<algo>/..."`, replacing ... with the name of your datafile.
+        * If you're algorithm writes to a particular location, to ensure that the collection exists it's recommended to use the following output schema:
+            * `"data://.algo/temp/..."`, replacing ... with the name of your datafile.
+    * `"timeout"` - the amount of seconds we should wait for your algorithm before determining that the test failed, maximum value is `3000`.
+#### algorithms
+
+This is where you define the algorithms that your workflow will need to get executed, this includes any dependent algorithms (like smart image downloader).
+Please ensure that you define your algorithms in order of dependency requirements. If one of your algorithms depends on another, list the downstream one first.
+* `"algorithms"` - a list of algorithm objects that this workflow will use
+    * `"name"` - the name of your algorithm, must match the name of the directory defined in `/algorithms` as well as the name of the algorithm files associated.
+        * for example, if your algorithm is "hello_world", the directory path containing your algorithm code must be `/algorithms/hello_world` which in the src directory contains `hello_world.py` and `hello_world_test.py`
+    * `"data_files"` - this list object contains all model files and other objects required at runtime for your algorithm, as a data API URI prefixed with '.my'
+        * for the moment, these files should be stored in a data collection owned by user `quality` on production
+        * data file collection paths are not used, so they can be anything
+        * If your algorithm uses an image or data file as input for testing, those objects should be stored using this system as well
+    * `"language"` - the environments `language` enum that should be used to create this algorithm.
+        * the concept of "language" is not quite right, as we're potentially using the same language but with different dependencies
+        * check to make sure that your required dependencies exist as a language already defined in `/src/images.py`
+        * if running the benchmark on an AEMS cluster that does not access to the PROD or TEST AEMS masters, you'll need to interact with the `environments/current` webapi endpoint to populate your environments list
+        * if you hit any kind of system 500 error during the build stage, make sure that your language is configured and that the language `environment id` is valid.
+    * `"test_payload"` - the json encodable (string, list, dict, etc) algorithm payload you wish to send to your algorithm to verify runtime functionality
+        * not used during the benchmark process, you may use different payloads during validation and benchmarking
+        * If you're interacting with data files, it's recommended to define them in your algorithm's `data_files` object, and to refer to them with the following schema:
+            * `"data://.my/<algo>/..."`, replacing ... with the name of your datafile.
+If you have any questions as to the schema or best practices in regards to creating a workflow file, please ping zeryx or the algo-team on slack and we should be able to help :)
+              
+### Algorithm Template Creation
+Now that we have the workflow configured, lets take a look at the `/algorithms` directory, and what it takes to setup a new algorithm template.
+
+Currently our templating service supports the following languages:
+* [x] Python
+* [ ] Scala
+* [ ] Java
+* [ ] R
+* [ ] Javascript
+* [ ] Ruby
+* [ ] C#
+* [ ] Rust
+#### For Python
+* the name of each directory **is equal to** the name of the algorithm, this is used for lookups and is important.
+  * This is also case sensitve, as algorithm names are also case sensitive.
+  * eg: "/algorithms/BoundingBoxOnImage" contains the `BoundingBoxOnImage` algorithm
+* inside an algorithm directory, we have a `/src` directory and a `requirements.txt` file
+    * The `/src` directory should contain all algorithm files present in the original algorithms `src` directory.
+    * However, for any references to an algorithm or data file, should be replaced with the following:
+        * for data files:
+            * original - `"data://myuser/mycollection/somedata_file"`
+            * template friendly version - `"data://.my/<algo>/somedata_file"`
+        * for algorithms:
+            * original - `"algo://someuser/somealgo/0.2.4"`
+            * template friendly version - `"algo://.my/somealgo/latestPrivate"`
+* typically, no changes are required for `requirements.txt` files, just copy them from the original algorithm.
+* if you end up using a data location on disk that contains the algorithm name, consider renaming it as there may be a conflict with our algorithm creation service.
+
+
+

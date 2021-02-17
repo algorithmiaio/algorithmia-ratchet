@@ -2,7 +2,7 @@ import Algorithmia
 
 import time
 import zipfile
-
+from os import walk
 import tensorflow as tf
 from transformers import AlbertTokenizer, AlbertConfig
 from transformers.modeling_tf_albert import TFAlbertForSequenceClassification
@@ -14,8 +14,8 @@ NUM_LABELS = 2
 DEFAULT_MAX_LEN = 128
 DEFAULT_BATCH_SIZE = 16
 
-MODEL_ZIP_PATH = "data://.my/classification_albert/classification_albert_model_params.zip"
-UNZIPPED_MODEL_PATH = "classification_albert_model_params"
+MODEL_ZIP_PATH = "data://.my/classification_albert/model_params.zip"
+UNZIPPED_MODEL_PATH = "model_params"
 
 
 client = Algorithmia.client()
@@ -24,16 +24,20 @@ client = Algorithmia.client()
 def get_unzipped_dir_path(zip_path_in_collection, dir_name):
     start = time.time()
     zip_in_collection = client.file(zip_path_in_collection).getFile().name
-    output_dir = "/tmp"
+    output_dir = "/tmp/somedir"
     try:
         zipped_file = zipfile.ZipFile(zip_in_collection, "r")
         zipped_file.extractall(output_dir)
         zipped_file.close()
         duration = time.time() - start
+        output_directory_name = None
+        for dirpath, dirnames, filenames in walk(output_dir):
+            for dirname in dirnames:
+                output_directory_name = dirname
         print(f"Getting model data took {duration}")
     except Exception as e:
         print("Exception occurred while creating dir: {}".format(e))
-    return "{}/{}".format(output_dir, dir_name)
+    return "{}/{}".format(output_dir, output_directory_name)
 
 
 def load_model_and_tokenizer():

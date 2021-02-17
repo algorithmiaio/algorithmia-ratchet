@@ -5,7 +5,7 @@ import tarfile
 import shutil
 import requests
 from src.utilities import algorithm_exists, call_algo
-from time import sleep
+from uuid import uuid4
 import sys
 from os import environ, path, listdir
 from src.algorithm_creation import initialize_algorithm, migrate_datafiles, update_algorithm
@@ -33,6 +33,16 @@ def find_algo(algo_name, artifact_path):
         raise Exception(f"algorithm {algo_name} not found in local cache (algorithms)")
 
 
+def template_payload(payload, template_name):
+    if isinstance(payload, str):
+        payload = payload.replace("<algo>", template_name)
+    elif isinstance(payload, dict):
+        for key in payload.keys():
+            if isinstance(payload[key], str):
+                payload[key] = payload[key].replace("<algo>", template_name)
+    return payload
+
+
 def delete_workflows(workflows, destination_client: Client):
     for workflow in workflows:
         for algorithm in workflow.get("algorithms", []):
@@ -55,13 +65,18 @@ def delete_workflows(workflows, destination_client: Client):
 def create_workflows(workflows, source_client, destination_aems_master, destination_client):
     entrypoints = []
     for workflow in workflows:
-        print("----- Creating workflow {} -----".format(workflow["name"]))
+        print(f"----- Creating workflow {workflow['name']} -----")
+        workflow_suffix = str(uuid4()).split('-')[-1]
+        print(f"----- Workflow Suffix is: {workflow_suffix} -----")
         entrypoint_path = workflow['test_info'].get("entrypoint", None)
+        algorithm_pairs = []
         for algorithm in workflow.get("algorithms", []):
             if path.exists(WORKING_DIR):
                 shutil.rmtree(WORKING_DIR)
             print("\n")
-            algorithm_name = algorithm['name']
+            template_algorithm_name = algorithm['name']
+            new_algorithm_name = f"{template_algorithm_name}_{workflow_suffix}"
+            algorithm_pairs.append(( template_algorithm_name, new_algorithm_name))
             remote_code_path = algorithm.get("code", None)
             language = algorithm['language']
             data_file_paths = algorithm['data_files']
@@ -75,19 +90,20 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
                     f.extractall(path=artifact_path)
             else:
                 print("checking for local code...")
-                find_algo(algorithm_name, artifact_path)
+                find_algo(template_algorithm_name, artifact_path)
 
             print("initializing algorithm...")
-            algo_object = initialize_algorithm(algorithm_name, language, destination_aems_master, destination_client)
+            algo_object = initialize_algorithm(new_algorithm_name, language, destination_aems_master, destination_client)
             print("migrating datafiles...")
             migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
             print("updating algorithm source...")
-            update_algorithm(algo_object, destination_client, WORKING_DIR, artifact_path)
+            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR, artifact_path)
             print("testing algorithm...")
-            algorithm_test(algo_object, test_payload)
+            payload = template_payload(test_payload, new_algorithm_name)
+            algorithm_test(algo_object, payload)
             print("publishing algorithm...")
             published_algorithm = algorithm_publish(algo_object, test_payload)
-            if entrypoint_path and entrypoint_path == algorithm_name:
+            if entrypoint_path and entrypoint_path == template_algorithm_name:
                 entrypoints.append(published_algorithm)
     return entrypoints
 
@@ -99,6 +115,7 @@ def workflow_test(algorithms, workflows):
         for test in test_info['tests']:
             name = test['name']
             payload = test['payload']
+            payload = template_payload(payload, algorithm.algoname)
             timeout = test['timeout']
             message = f"test {name} for {algorithm.username}/{algorithm.algoname} with timeout {timeout}"
             print("starting " + message)
@@ -115,7 +132,7 @@ if __name__ == "__main__":
     destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
     destination_aems_master = environ.get("DESTINATION_AEMS_MASTER", "prod")
     if len(sys.argv) > 1:
-        workflow_names = str(sys.argv[1])
+        workflow_names = [str(sys.argv[1])]
     else:
         workflow_names = []
         for file in listdir("workflows"):
@@ -127,10 +144,6 @@ if __name__ == "__main__":
                                        ca_cert=source_ca_cert)
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
-    # print("----deleting algorithms-----")
-    # delete_workflows(workflows, destination_client)
-    print("------- waiting for algorithm caches to clear ---------")
-    sleep(15)
     print("------- Starting Algorithm Export/Import Procedure -------")
     entrypoint_algos = create_workflows(workflows, source_client, destination_aems_master, destination_client)
     print("------- Workflow Created, initiating QA Test Procedure -------")
