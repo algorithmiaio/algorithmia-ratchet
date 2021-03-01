@@ -7,7 +7,7 @@ from time import time
 
 sample_image_url = "https://james-s-public.s3.amazonaws.com/lena.png"
 client = Algorithmia.client()
-processing_algorithm = "algo://<user>/deepfashion/latestPrivate"
+processing_algorithm = "algo://<user>/DeepFashion/latestPrivate"
 MAX_CONCURRENT_CONNECTIONS=12
 
 def process(url, client):
