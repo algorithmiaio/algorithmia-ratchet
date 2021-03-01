@@ -65,8 +65,8 @@ def update_algorithm(algo, original_name, algorithm_pairs, remote_client, worksp
     git_path = f"https://{algo.username}:{api_key}@git.{api_address.split('https://api.')[-1]}/git/{destination_username}/{destination_algorithm_name}.git"
     os.makedirs(artifact_path, exist_ok=True)
     os.makedirs(repo_path, exist_ok=True)
-    sh.git.config("user.email", "ci@algorithmia.com")
-    sh.git.config("user.name", "CI")
+    sh.git.config("--global", "user.email", "ci@algorithmia.com")
+    sh.git.config("--global", "user.name", "CI")
     clone_bake = sh.git.bake(C=workspace_path)
     publish_bake = sh.git.bake(C=repo_path)
     clone_bake.clone(git_path)
