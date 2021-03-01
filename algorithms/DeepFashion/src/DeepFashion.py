@@ -17,8 +17,8 @@ TEMP_COLLECTION = 'data://.session'
 # TEMP_COLLECTION = 'data://zeryx/testing'
 BOUNDING_BOX_ALGO = '<user>/BoundingBoxOnImage/latestPrivate'
 SIMD_ALGO = "<user>/SmartImageDownloader/latestPrivate"
-SSD_MODEL_FILE = "data://<user>/deepfashion/ssd_v1.1.pb"
-LABEL_FILE = "data://<user>/deepfashion/label_map.pbtxt"
+SSD_MODEL_FILE = "data://<user>/DeepFashion/ssd_v1.1.pb"
+LABEL_FILE = "data://<user>/DeepFashion/label_map.pbtxt"
 NUM_CLASSES = 51
 SSD_LOCAL = None
 LABEL_LOCAL = None
@@ -198,7 +198,7 @@ def apply(input):
     threshold = 0.5
     if isinstance(input, str):
         input_images = [get_image(input)]
-        output_paths = ["data://.algo/<user>/deepFashion/temp/{}.png".format(str(uuid4())) for _ in
+        output_paths = ["data://.algo/<user>/DeepFashion/temp/{}.png".format(str(uuid4())) for _ in
                         range(len(input_images))]
     elif isinstance(input, dict):
         if 'image' in input:
@@ -208,7 +208,7 @@ def apply(input):
         if 'output' in input:
             output_paths = type_check(input, 'output', list)
         else:
-            output_paths = ["data://.algo/<user>/deepFashion/temp/{}.png".format(str(uuid4())) for _ in
+            output_paths = ["data://.algo/<user>/DeepFashion/temp/{}.png".format(str(uuid4())) for _ in
                             range(len(input_images))]
         if 'tags_only' in input:
             tags_only = input['tags_only']

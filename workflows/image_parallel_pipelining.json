@@ -73,5 +73,6 @@
       "language": "python3",
       "test_payload": 1
     }
-  ]
+  ],
+  "run_only": true
 }

@@ -66,8 +66,12 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
     entrypoints = []
     for workflow in workflows:
         print(f"----- Creating workflow {workflow['name']} -----")
-        workflow_suffix = str(uuid4()).split('-')[-1]
-        print(f"----- Workflow Suffix is: {workflow_suffix} -----")
+        if workflow.get("run_only", False):
+            workflow_suffix = "1"
+            print("----- Workflow is set to run-only, not recompilling -----")
+        else:
+            workflow_suffix = str(uuid4()).split('-')[-1]
+            print(f"----- Workflow Suffix is: {workflow_suffix} -----")
         entrypoint_path = workflow['test_info'].get("entrypoint", None)
         algorithm_pairs = []
         for algorithm in workflow.get("algorithms", []):
@@ -144,7 +148,7 @@ if __name__ == "__main__":
                                        ca_cert=source_ca_cert)
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
-    print("------- Starting Algorithm Export/Import Procedure -------")
+    print("------- Starting Algorithm Benchmark Creation Procedure -------")
     entrypoint_algos = create_workflows(workflows, source_client, destination_aems_master, destination_client)
     print("------- Workflow Created, initiating QA Test Procedure -------")
     workflow_test(entrypoint_algos, workflows)

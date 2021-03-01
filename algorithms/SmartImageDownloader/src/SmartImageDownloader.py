@@ -30,7 +30,7 @@ browser_headers = [
     {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0"}
 ]
 
-defaultTargetDirectory = "data://.algo/<user>/smartimagedownloader/temp/"
+defaultTargetDirectory = "data://.algo/<user>/SmartImageDownloader/temp/"
 
 class AlgorithmError(Exception):
     def __init__(self, value):
