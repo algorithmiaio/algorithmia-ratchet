@@ -3,14 +3,8 @@
     "cluster_address": "https://api.algorithmia.com"
   },
   "test_info": {
-    "entrypoint":  "hello_world",
-    "tests": [
-      {
-        "name": "basic test",
-        "payload": "Algorithmia",
-        "timeout": 5
-      }
-    ]
+    "entrypoint": "hello_world",
+    "tests": []
   },
   "algorithms": [
     {
@@ -19,5 +13,6 @@
       "language": "python3",
       "test_payload": "Algorithmia"
     }
-  ]
+  ],
+  "run_only": true
 }
