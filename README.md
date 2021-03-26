@@ -31,18 +31,18 @@ here is a list of all of them and what they refer to:
     * The name of the master of which AEMS images are pulled from, can be either `test` or `prod` today
     * Defaults to `prod`
 * `WORKFLOW_NAME`
-    * The name of the workflow file you wish to execute. For a quick example check out [image_parallel_processing.json](workflows/image_benchmark.json)
+    * The name of the workflow file you wish to execute. For a quick example check out [image_benchmark.json](workflows/image_benchmark.json)
     
 After your environment variables are set, simply execute with:
 `python3 export_and_test_my_algorithm.py`
 If an exception is thrown at any stage, something went wrong - however if no failures were thrown that means everything is working perfectly, including our QA benchmark! Great!
 
 ## How to create a workflow
-Please check out [image_parallel_processing.json](workflows/image_benchmark.json) as an example while we walk through the process.
+Please check out [image_benchmark.json](workflows/image_benchmark.json) as an example while we walk through the process.
 
 A workflow is a json file consisting of 3 separate objects, `source_info`, `test_info`, and `algorithms`
 * `source_info`
-    * Contains information around where your algorithm code, and requisite model files are
+    * Contains information around where your algorithm code, and requisite model files are; defaults to pointing to the production cluster.
     * Contains the following fields:
         * `cluster_address` 
             * The api address where our source cluster is located, similar to `DESTINATION_API_ADDRESS` but as we  have a single source of truth for our workflow; this is baked in
