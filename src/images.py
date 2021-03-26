@@ -7,10 +7,10 @@ PROD_IMAGES={
     "tensorflow-2.3": "2c907a75-902c-4d8c-8f13-512f73cfa989"
 }
 TEST_IMAGES={
-    "python3": "4beb6189-3e18-4a7a-a466-473bebe68a9f",
-    "python2": "a6d09f0a-802e-436e-9343-00f8fcbb92c9",
-    "pytorch-1.7": "89881307-b29d-4e11-8042-d3b72a89b0b9",
+    "python3": "75acb520-0e72-4b8d-957d-1fa7217074dc",
+    "python2": "acf5c800-e74e-47cf-a8a4-b1234aaa4158",
+    "pytorch-1.7": "b691fb6a-8320-4780-af1d-9cfa8aaeb5a1",
     "tensorflow-1.14": "b2fc4afc-9870-4c7a-ba05-342395c79caa",
-    "tensorflow-2.3": "63353687-6259-4904-a222-c567c9eb3c31",
+    "tensorflow-2.3": "e7748dc7-2a2a-41fd-991c-586364bea056",
     "python2-gpu": "81a527be-1721-4ef4-b1e2-b4d3997dd758"
 }
