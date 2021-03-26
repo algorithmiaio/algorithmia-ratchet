@@ -1,7 +1,4 @@
 {
-  "source_info": {
-    "cluster_address": "https://api.algorithmia.com"
-  },
   "test_info": {
     "entrypoint":  "ParallelPipelining",
     "tests": [

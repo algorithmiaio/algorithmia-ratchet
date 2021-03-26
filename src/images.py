@@ -1,9 +1,9 @@
 
 PROD_IMAGES={
-    "python3": "fbe2e978-9deb-494d-a2d1-e07e121d5ba0",
+    "python3": "097723b5-9f11-4c9f-8721-c3ad7e50491b",
     "python2": "e9088b81-b781-4df3-8cda-c064f607244b",
-    "pytorch-1.7": "f825234b-e2c4-4a61-83a6-74378514dcf0",
-    "tensorflow-1.14": "7885d20f-5165-4bcd-b5ac-0c5fb847b883",
+    "pytorch-1.7": "63c44359-1df9-4be1-a82e-2dcf94624890",
+    "tensorflow-1.14": "bed0c9d1-4eaf-4fcb-8e0c-31cef3ea955d",
     "tensorflow-2.3": "2c907a75-902c-4d8c-8f13-512f73cfa989"
 }
 TEST_IMAGES={

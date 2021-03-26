@@ -144,7 +144,11 @@ if __name__ == "__main__":
                 workflow_names.append(file.split(".json")[0])
 
     workflows = get_workflows(workflow_names)
-    source_client = Algorithmia.client(api_key=source_api_key, api_address=workflows[0]['source_info']['cluster_address'],
+    if "source_info" in workflows[0]:
+        source_api_address = workflows[0]['source_info']['cluster_address']
+    else:
+        source_api_address = "https://api.algorithmia.com"
+    source_client = Algorithmia.client(api_key=source_api_key, api_address=source_api_address,
                                        ca_cert=source_ca_cert)
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
