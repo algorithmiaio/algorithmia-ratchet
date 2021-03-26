@@ -82,7 +82,7 @@ def update_algorithm(algo, original_name, algorithm_pairs, remote_client, worksp
     sh.mv(f"{repo_path}/src/{original_name}_test.py", f"{repo_path}/src/{destination_algorithm_name}_test.py")
     try:
         publish_bake.add(".")
-        publish_bake.commit("--author", "CI <>", m="automatic initialization commit")
+        publish_bake.commit("--author", "CI <ci@algorithmia.com>", m="automatic initialization commit")
         publish_bake.push()
         return algo
     except Exception as e:
