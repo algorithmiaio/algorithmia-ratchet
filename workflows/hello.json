@@ -7,7 +7,8 @@
     {
       "name": "hello_world",
       "data_files": [],
-      "language": "python3",
+      "environment": "python3",
+      "language": "python-pip-old",
       "test_payload": "Algorithmia"
     }
   ],

@@ -1,0 +1,17 @@
+name: algo_simulator
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.8.6
+  - pip
+  - pytorch
+  - cudatoolkit=10.2
+
+  # This only for Linux when we deploy to algo
+  - stress-ng
+
+  - pip:
+    # Your pip dependencies
+    - algorithmia>=1.0.0,<2.0
+    - six>=1.12.0

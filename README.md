@@ -110,13 +110,14 @@ First create a workflow with a useful filename, you'll use this to refer to your
     * It can be any collection, but the reason for this is to ensure that we can export data into closed off networks.
     
 Lets look at a basic template and walk through the different components.
+
 ```json
 {
   "source_info": {
     "cluster_address": "https://api.algorithmia.com"
   },
   "test_info": {
-    "entrypoint":  "hello_world",
+    "entrypoint": "hello_world",
     "tests": [
       {
         "name": "basic test",
@@ -129,7 +130,7 @@ Lets look at a basic template and walk through the different components.
     {
       "name": "hello_world",
       "data_files": [],
-      "language": "python3",
+      "environment": "python3",
       "test_payload": "Algorithmia"
     }
   ]

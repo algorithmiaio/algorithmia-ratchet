@@ -1,0 +1,22 @@
+{
+  "test_info": {
+    "entrypoint":  "algo-simulator",
+    "tests": [
+      {
+        "name": "default simulation",
+        "payload": {},
+        "timeout": 10
+      }
+    ]
+  },
+  "algorithms": [
+    {
+      "name": "algo_simulator",
+      "data_files": [],
+      "environment": "anaconda3-gpu",
+      "language": "python-anaconda",
+      "test_payload": {}
+    }
+  ],
+  "run_only": true
+}

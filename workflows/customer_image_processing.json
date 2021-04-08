@@ -18,7 +18,8 @@
         "data://.my/selfie2anime/test.model.meta",
         "data://.my/selfie2anime/checkpoint"
       ],
-      "language": "tensorflow-1.14",
+      "environment": "tensorflow-1.14",
+      "language": "python-pip-old",
       "test_payload": {"in": "https://cdn.dxomark.com/wp-content/uploads/medias/post-29213/160_OnePlus7_DxOMark_Selfie-1-e1557408678866.jpg", "out":"data://.algo/temp/test.jpg"}
     }
   ],

@@ -17,7 +17,8 @@
   "algorithms": [
     {
       "name": "SmartImageDownloader",
-      "language": "python2",
+      "environment": "python2",
+      "language": "python-pip-old",
       "data_files": [
         "data://.my/artifacts/willow_example.jpeg"
       ],
@@ -28,7 +29,8 @@
     },
     {
       "name": "BoundingBoxOnImage",
-      "language": "python3",
+      "environment": "python3",
+      "language": "python-pip-old",
       "data_files": [
         "data://.my/artifacts/willow_example.jpeg"
       ],
@@ -61,13 +63,14 @@
         "data://.my/artifacts/label_map.pbtxt",
         "data://.my/artifacts/willow_example.jpeg"
       ],
-      "language": "tensorflow-1.14",
+      "environment": "tensorflow-1.14",
       "test_payload": "data://.my/<algo>/willow_example.jpeg"
     },
     {
       "name": "ParallelPipelining",
       "data_files": [],
-      "language": "python3",
+      "environment": "python3",
+      "language": "python-pip-old",
       "test_payload": 1
     }
   ],

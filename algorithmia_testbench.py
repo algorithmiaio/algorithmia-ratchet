@@ -82,7 +82,8 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
             new_algorithm_name = f"{template_algorithm_name}_{workflow_suffix}"
             algorithm_pairs.append(( template_algorithm_name, new_algorithm_name))
             remote_code_path = algorithm.get("code", None)
-            language = algorithm['language']
+            language = algorithm.get("language", "python-pip-old")
+            environment = algorithm['environment']
             data_file_paths = algorithm['data_files']
             test_payload = algorithm['test_payload']
             artifact_path = f"{WORKING_DIR}/source"
@@ -97,11 +98,11 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
                 find_algo(template_algorithm_name, artifact_path)
 
             print("initializing algorithm...")
-            algo_object = initialize_algorithm(new_algorithm_name, language, destination_aems_master, destination_client)
+            algo_object = initialize_algorithm(new_algorithm_name, environment, destination_aems_master, destination_client)
             print("migrating datafiles...")
             migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
             print("updating algorithm source...")
-            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR, artifact_path)
+            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR, artifact_path, language=language)
             print("testing algorithm...")
             payload = template_payload(test_payload, new_algorithm_name)
             algorithm_test(algo_object, payload)

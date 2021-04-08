@@ -20,7 +20,8 @@
       "data_files": [
         "data://.my/classification_albert/model_params.zip"
       ],
-      "language": "tensorflow-2.3",
+      "environment": "tensorflow-2.3",
+      "language": "python-pip-old",
       "test_payload": {"texts": ["Hello", "Nice to meet you", "I can not login", "It does not work"]}
     }
   ]
