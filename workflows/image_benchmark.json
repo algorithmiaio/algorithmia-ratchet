@@ -8,8 +8,8 @@
         "timeout": 120
       },
       {
-        "name": "100 calls in 10 min",
-        "payload": 100,
+        "name": "50 calls in 10 min",
+        "payload": 50,
         "timeout": 600
       }
     ]
