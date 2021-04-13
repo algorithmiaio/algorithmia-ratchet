@@ -3,14 +3,14 @@
     "entrypoint":  "ParallelPipelining",
     "tests": [
       {
-        "name": "10 calls in 60 sec",
+        "name": "10 calls in 2 min",
         "payload": 10,
-        "timeout": 60
+        "timeout": 120
       },
       {
-        "name": "100 calls in 5 min",
+        "name": "100 calls in 10 min",
         "payload": 100,
-        "timeout": 300
+        "timeout": 600
       }
     ]
   },

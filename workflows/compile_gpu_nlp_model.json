@@ -3,14 +3,14 @@
     "entrypoint":  "classification_albert",
     "tests": [
       {
-        "name": "3 call in 10 sec",
+        "name": "3 call in 20 sec",
         "payload": {"texts": ["Hello", "Nice to meet you", "I can not login", "It does not work"]},
-        "timeout": 10
+        "timeout": 20
       },
       {
-        "name": "12 call in 15 sec",
+        "name": "12 call in 30 sec",
         "payload": {"texts": ["Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work", "Hello", "Nice to meet you", "I can not login", "It does not work"]},
-        "timeout": 15
+        "timeout": 30
       }
     ]
   },
