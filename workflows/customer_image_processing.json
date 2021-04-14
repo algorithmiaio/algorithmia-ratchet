@@ -3,9 +3,9 @@
     "entrypoint":  "selfie2anime",
     "tests": [
       {
-        "name": "1 call in 10 sec",
+        "name": "1 call in 20 sec",
         "payload": {"in": "https://cdn.dxomark.com/wp-content/uploads/medias/post-29213/160_OnePlus7_DxOMark_Selfie-1-e1557408678866.jpg", "out": "data://.algo/temp/test.jpg"},
-        "timeout": 10
+        "timeout": 20
       }
     ]
   },
