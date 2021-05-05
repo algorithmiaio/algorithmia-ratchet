@@ -25,7 +25,7 @@ def algorithm_publish(algo, payload):
         else:
             raise e
 
-def algorithm_test(algo, payload):
+def algorithm_test(algo, payload, retried=False):
     try:
         algo_info = algo.info()
         latest_hash = algo_info.version_info.git_hash
@@ -40,5 +40,8 @@ def algorithm_test(algo, payload):
             sleep(1)
             algorithm_test(algo, payload)
             return algo
+        elif not retried:
+            sleep(1)
+            algorithm_test(algo,payload, retried=True)
         else:
             raise e
