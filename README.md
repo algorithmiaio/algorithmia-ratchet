@@ -1,5 +1,7 @@
-# Algorithmia TestBench
+# Algorithmia Ratchet
 A system to export an algorithm (or algorithms) from one cluster to another, and run real-life benchmark tests to ensure cluster quality and stability.
+We _Ratchet_ up our expectations of the platform health as our platform becomes more successful. 
+This guarentees that we're always pushing the bar in terms of our tests and what we expect the platform to be able to do.
 
 ## Requirements
 As this workflow will download and then upload dependency files, if your workflow contains large dependencies it's recommended to execute this on a server (such as Deep Purple) via proxy.
