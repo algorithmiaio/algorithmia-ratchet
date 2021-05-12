@@ -129,12 +129,15 @@ def workflow_test(algorithms, workflows):
 
 
 if __name__ == "__main__":
-    source_api_key = environ.get("SOURCE_API_KEY")
+    source_api_key = environ.get("RATCHET_API_KEY")
     source_ca_cert = environ.get("SOURCE_CA_CERT", None)
-    destination_api_address = environ.get("DESTINATION_API_ADDRESS")
-    destination_api_key = environ.get("DESTINATION_API_KEY")
+    # destination_api_address = environ.get("DESTINATION_API_ADDRESS")
+    # destination_api_key = environ.get("DESTINATION_API_KEY")
+    destination_api_address = environ.get("FQDN")
+    destination_api_key = environ.get("API_KEY")
     destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
     destination_aems_master = environ.get("DESTINATION_AEMS_MASTER", "prod")
+    destination_api_address = "https://api.{}".format(destination_api_address)
     if len(sys.argv) > 1:
         workflow_names = [str(sys.argv[1])]
     else:
