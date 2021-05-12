@@ -138,6 +138,8 @@ if __name__ == "__main__":
     destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
     destination_aems_master = environ.get("DESTINATION_AEMS_MASTER", "prod")
     destination_api_address = "https://api.{}".format(destination_api_address)
+    print(destination_api_address)
+    print(destination_api_key)
     if len(sys.argv) > 1:
         workflow_names = [str(sys.argv[1])]
     else:
