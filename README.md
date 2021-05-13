@@ -12,7 +12,7 @@ This workflow does not contain any system dependencies, all that's required is a
 Before running, this script uses a number of `environment variables` to help it understand state and to preserve privacy,
 here is a list of all of them and what they refer to:
 
-* `SOURCE_API_KEY`
+* `RATCHET_API_KEY`
     * The API Key that has access to your source code (stored as a tar.gz ball), along with your model files
     * This API key must be management capable, able to read/write data, and has no restrictions on algorithm paths
     * We capture the username that owns this API key from the key itself
@@ -20,23 +20,26 @@ here is a list of all of them and what they refer to:
 * `SOURCE_CA_CERT`
     * This optional field is used to pass a certificate to our algorithm clients, in the event that the source cluster requires one.
     * No default, optional
-* `DESTINATION_API_ADDRESS`
-    * Similar to our source API address, but the destination; where are we writing our algorithms to?
+* `FQDN`
+    * The destination API address; where are we writing our algorithms to?
     * Has no default
-    * If unsure as to what your API address is, simply prefix your url with `api`, like `https://api.someuser.enthalpy.click`
-* `DESTINATION_API_KEY`
+    * If unsure as to what your API address is, simply copy everything after https://, like `someuser.enthalpy.click`
+* `API_KEY`
     * Same as our source api key, but must be owned by the `algorithm_owner` user defined in your workflow file
     * Must be management capable, ability to read/write and create data collections, and have unrestricted algorithm access
+* `ADMIN_API_USERNAME`
+    * This is used to ensure we have the right environment ids in a cluster
+    * This will be deprecated once environments are supprted via the admin API
+* `ADMIN_API_PASSWORD`
+    * This is used to ensure we have the right environment ids in a cluster
+    * This will be deprecated once environments are supprted via the admin API
 * `DESTINATION_CA_CERT`
     * Same as the optional source ca cert, optional - but if the destination cluster requires one; can be provided here
-* `DESTINATION_AEMS_MASTER`
-    * The name of the master of which AEMS images are pulled from, can be either `test` or `prod` today
-    * Defaults to `prod`
 * `WORKFLOW_NAME`
     * The name of the workflow file you wish to execute. For a quick example check out [image_benchmark.json](workflows/image_benchmark.json)
     
 After your environment variables are set, simply execute with:
-`python3 export_and_test_my_algorithm.py`
+`python3 algorithmia_ratchet.py`
 If an exception is thrown at any stage, something went wrong - however if no failures were thrown that means everything is working perfectly, including our QA benchmark! Great!
 
 ## How to create a workflow
@@ -131,7 +134,7 @@ Lets look at a basic template and walk through the different components.
     {
       "name": "hello_world",
       "data_files": [],
-      "language": "python3",
+      "environment_name": "Python 3.7",
       "test_payload": "Algorithmia"
     }
   ]
@@ -163,7 +166,7 @@ Please ensure that you define your algorithms in order of dependency requirement
         * for the moment, these files should be stored in a data collection owned by user `quality` on production
         * data file collection paths are not used, so they can be anything
         * If your algorithm uses an image or data file as input for testing, those objects should be stored using this system as well
-    * `"language"` - the environments `language` enum that should be used to create this algorithm.
+    * `"environment_name"` - the environments `environment_name` enum that should be used to create this algorithm.
         * the concept of "language" is not quite right, as we're potentially using the same language but with different dependencies
         * check to make sure that your required dependencies exist as a language already defined in `/src/images.py`
         * if running the benchmark on an AEMS cluster that does not access to the PROD or TEST AEMS masters, you'll need to interact with the `environments/current` webapi endpoint to populate your environments list
