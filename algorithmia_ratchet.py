@@ -4,8 +4,8 @@ import json
 import tarfile
 import shutil
 import requests
-from src.utilities import algorithm_exists, call_algo, find_environment_id
-from src.webapi import get_environments
+from src.utilities import algorithm_exists, call_algo
+from src.webapi import get_available_environments, get_downloadable_environments, find_environment, sync_environment
 from uuid import uuid4
 import sys
 from os import environ, path, listdir
@@ -63,7 +63,7 @@ def delete_workflows(workflows, destination_client: Client):
                 print(f"algorithm {username}/{algoname} doesn't exist, skipping...")
 
 
-def create_workflows(workflows, source_client, environments, destination_client):
+def create_workflows(workflows, source_client, environments, destination_client, destination_admin_key, destination_fqdn):
     entrypoints = []
     for workflow in workflows:
         print(f"----- Creating workflow {workflow['name']} -----")
@@ -86,7 +86,13 @@ def create_workflows(workflows, source_client, environments, destination_client)
             language = algorithm['environment_name']
             data_file_paths = algorithm['data_files']
             test_payload = algorithm['test_payload']
-            environment_id = find_environment_id(language, environments)
+            environment_id, _ = find_environment(language, environments)
+            if not environment_id:
+                global_environments = get_downloadable_environments(destination_admin_key, destination_fqdn)
+                _, environment_spec_id = find_environment(language, global_environments)
+                sync_environment(destination_admin_key, destination_fqdn, environment_spec_id)
+                environment_id, _ = find_environment(language, environments)
+
             artifact_path = f"{WORKING_DIR}/source"
             if remote_code_path:
                 print("downloading code...")
@@ -147,7 +153,7 @@ if __name__ == "__main__":
             if file.endswith(".json"):
                 workflow_names.append(file.split(".json")[0])
 
-    environments = get_environments(destination_admin_api_key, destination_webapi_address)
+    environments = get_available_environments(destination_admin_api_key, destination_webapi_address)
 
     workflows = get_workflows(workflow_names)
     if "source_info" in workflows[0]:
@@ -159,6 +165,6 @@ if __name__ == "__main__":
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
     print("------- Starting Algorithm Benchmark Creation Procedure -------")
-    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client)
+    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client, destination_admin_api_key, destination_fqdn)
     print("------- Workflow Created, initiating QA Test Procedure -------")
     workflow_test(entrypoint_algos, workflows)
