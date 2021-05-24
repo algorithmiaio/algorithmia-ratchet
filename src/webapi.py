@@ -5,9 +5,9 @@ import requests
 def find_environment(environment_name, environments):
     for environment in environments:
         if environment['display_name'] == environment_name:
-            return (environment['id'], environment['environment_specification_id'])
+            return {"id": environment['id'], "spec_id": environment['environment_specification_id']}
     print("environment {} not found.".format(environment_name))
-    return False
+    return {}
 
 def get_available_environments(admin_api_key, fqdn):
     headers = {"Authorization": admin_api_key}

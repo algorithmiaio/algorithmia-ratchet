@@ -86,12 +86,12 @@ def create_workflows(workflows, source_client, environments, destination_client,
             language = algorithm['environment_name']
             data_file_paths = algorithm['data_files']
             test_payload = algorithm['test_payload']
-            environment_id, _ = find_environment(language, environments)
-            if not environment_id:
+            env_data = find_environment(language, environments)
+            if "id" not in env_data:
                 global_environments = get_downloadable_environments(destination_admin_key, destination_fqdn)
-                _, environment_spec_id = find_environment(language, global_environments)
-                sync_environment(destination_admin_key, destination_fqdn, environment_spec_id)
-                environment_id, _ = find_environment(language, environments)
+                remote_env_data = find_environment(language, global_environments)
+                sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'])
+                env_data = find_environment(language, environments)
 
             artifact_path = f"{WORKING_DIR}/source"
             if remote_code_path:
@@ -105,7 +105,7 @@ def create_workflows(workflows, source_client, environments, destination_client,
                 find_algo(template_algorithm_name, artifact_path)
 
             print("initializing algorithm...")
-            algo_object = initialize_algorithm(new_algorithm_name, environment_id, destination_client)
+            algo_object = initialize_algorithm(new_algorithm_name, env_data['id'], destination_client)
             print("migrating datafiles...")
             migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
             print("updating algorithm source...")
