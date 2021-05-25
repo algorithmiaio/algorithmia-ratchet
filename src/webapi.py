@@ -42,10 +42,15 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
     while True:
         response = requests.get(status_url, headers=headers, verify=False)
         if response.status_code == 200:
-            print("waiting for sync...")
-            sleep(5)
-        elif response.status_code == 404:
-            print("sync complete")
-            return True
+            data = response.json()
+            sync_result = data['sync_result']
+            if sync_result['status'] == "succeeded":
+                return True
+            elif sync_result['status'] == "failed":
+                raise Exception("Syncing failed: {}".format(sync_result['message']))
+            else:
+                print("still syncing...")
+                sleep(1)
+
         else:
             raise Exception("Syncing failed: {}".format(response))

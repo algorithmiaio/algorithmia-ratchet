@@ -92,6 +92,8 @@ def create_workflows(workflows, source_client, environments, destination_client,
                 remote_env_data = find_environment(language, global_environments)
                 sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'])
                 env_data = find_environment(language, environments)
+                if "id" not in env_data:
+                    raise Exception("syncing failed, environment not found")
 
             artifact_path = f"{WORKING_DIR}/source"
             if remote_code_path:
