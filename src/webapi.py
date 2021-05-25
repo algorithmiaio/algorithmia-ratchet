@@ -37,8 +37,11 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
     if response.status_code != 202:
         print(response.status_code)
         raise Exception("Unable to sync environment: {}".format(response))
+    else:
+        print("sync process initiated for {}".format(environment_spec_id))
     environment_id = response.text
     status_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs/{environment_id}"
+    print(status_url)
     while True:
         response = requests.get(status_url, headers=headers, verify=False)
         if response.status_code == 200:

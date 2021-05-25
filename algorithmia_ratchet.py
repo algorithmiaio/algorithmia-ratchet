@@ -53,7 +53,8 @@ def delete_workflows(workflows, destination_client: Client):
             algo_url = "{}/v1/algorithms/{}".format(destination_client.apiAddress, algo.path)
             if algorithm_exists(algo):
                 print(f"algorithm {username}/{algoname} exists; deleting...")
-                headers = {"Content-Type": "application/json", "Authorization": "Simple {}".format(destination_client.apiKey)}
+                headers = {"Content-Type": "application/json",
+                           "Authorization": "Simple {}".format(destination_client.apiKey)}
                 req = requests.delete(algo_url, headers=headers)
                 if req.status_code != 204:
                     raise Exception("Status code was: {}\n{}".format(req.status_code, req.text))
@@ -63,7 +64,8 @@ def delete_workflows(workflows, destination_client: Client):
                 print(f"algorithm {username}/{algoname} doesn't exist, skipping...")
 
 
-def create_workflows(workflows, source_client, environments, destination_client, destination_admin_key, destination_fqdn):
+def create_workflows(workflows, source_client, environments, destination_client, destination_admin_key,
+                     destination_fqdn):
     entrypoints = []
     for workflow in workflows:
         print(f"----- Creating workflow {workflow['name']} -----")
@@ -81,7 +83,7 @@ def create_workflows(workflows, source_client, environments, destination_client,
             print("\n")
             template_algorithm_name = algorithm['name']
             new_algorithm_name = f"{template_algorithm_name}_{workflow_suffix}"
-            algorithm_pairs.append(( template_algorithm_name, new_algorithm_name))
+            algorithm_pairs.append((template_algorithm_name, new_algorithm_name))
             remote_code_path = algorithm.get("code", None)
             language = algorithm['environment_name']
             data_file_paths = algorithm['data_files']
@@ -111,7 +113,8 @@ def create_workflows(workflows, source_client, environments, destination_client,
             print("migrating datafiles...")
             migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
             print("updating algorithm source...")
-            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR, artifact_path)
+            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR,
+                             artifact_path)
             print("testing algorithm...")
             payload = template_payload(test_payload, new_algorithm_name)
             algorithm_test(algo_object, payload)
@@ -167,6 +170,7 @@ if __name__ == "__main__":
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
     print("------- Starting Algorithm Benchmark Creation Procedure -------")
-    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client, destination_admin_api_key, destination_webapi_address)
+    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client,
+                                        destination_admin_api_key, destination_webapi_address)
     print("------- Workflow Created, initiating QA Test Procedure -------")
     workflow_test(entrypoint_algos, workflows)
