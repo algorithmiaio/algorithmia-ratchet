@@ -49,7 +49,7 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id, environment_id):
             if sync_result == "succeeded":
                 return True
             elif "failed" in sync_result:
-                raise Exception("Syncing failed: {}".format(sync_result['message']))
+                raise Exception("Syncing failed: {}".format(sync_result))
             else:
                 print("still syncing...")
                 sleep(5)
