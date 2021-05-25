@@ -14,7 +14,7 @@ def get_available_environments(admin_api_key, fqdn):
     url = f"{fqdn}/webapi/v1/algorithm-environments/environments/current"
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code != 200:
-        raise Exception("Unable to get environments: {}".format(response.json()))
+        raise Exception("Unable to get environments: {}".format(response))
     results = response.json()
     return results
 
@@ -25,7 +25,7 @@ def get_downloadable_environments(admin_api_key, fqdn):
     print("getting list of downloadable environments")
     response = requests.get(url, headers=headers, verify=False)
     if response.status_code != 200:
-        raise Exception("Unable to get environments: {}".format(response.json()))
+        raise Exception("Unable to get environments: {}".format(response))
     results = response.json()
     return results
 
@@ -36,8 +36,8 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
     response = requests.post(trigger_url, headers=headers)
     if response.status_code != 202:
         print(response.status_code)
-        raise Exception("Unable to sync environment: {}".format(response.text))
-    environment_id = response.json()['environment_id']
+        raise Exception("Unable to sync environment: {}".format(response))
+    environment_id = response.text
     status_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs/{environment_id}"
     while True:
         response = requests.get(status_url, headers=headers, verify=False)
@@ -48,4 +48,4 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
             print("sync complete")
             return True
         else:
-            raise Exception("Syncing failed: {}".format(response.text))
+            raise Exception("Syncing failed: {}".format(response))
