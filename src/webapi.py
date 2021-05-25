@@ -29,7 +29,7 @@ def get_downloadable_environments(admin_api_key, fqdn):
     results = response.json()
     return results
 
-def sync_environment(admin_api_key, fqdn, environment_spec_id):
+def sync_environment(admin_api_key, fqdn, environment_spec_id, environment_id):
     headers = {"Authorization": admin_api_key}
     trigger_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs"
     print("syncing environment {} ...".format(environment_spec_id))
@@ -39,7 +39,6 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
         raise Exception("Unable to sync environment: {}".format(response))
     else:
         print("sync process initiated for {}".format(environment_spec_id))
-    environment_id = response.text
     status_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs/{environment_id}"
     print(status_url)
     while True:
@@ -53,7 +52,7 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
                 raise Exception("Syncing failed: {}".format(sync_result['message']))
             else:
                 print("still syncing...")
-                sleep(1)
+                sleep(5)
 
         else:
             raise Exception("Syncing failed: {}".format(response))

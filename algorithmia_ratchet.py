@@ -92,7 +92,7 @@ def create_workflows(workflows, source_client, environments, destination_client,
             if "id" not in env_data:
                 global_environments = get_downloadable_environments(destination_admin_key, destination_fqdn)
                 remote_env_data = find_environment(language, global_environments)
-                sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'])
+                sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'], remote_env_data['id'])
                 env_data = find_environment(language, environments)
                 if "id" not in env_data:
                     raise Exception("syncing failed, environment not found")
