@@ -34,9 +34,9 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id):
     trigger_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs"
     print("syncing environment {} ...".format(environment_spec_id))
     response = requests.post(trigger_url, headers=headers)
-    if response.status_code != 200:
+    if response.status_code != 202:
         print(response.status_code)
-        raise Exception("Unable to sync environment: {}".format(response.json()))
+        raise Exception("Unable to sync environment: {}".format(response.text))
     environment_id = response.json()['environment_id']
     status_url = f"{fqdn}/webapi/v1/algorithm-environments/environment-specifications/{environment_spec_id}/syncs/{environment_id}"
     while True:
