@@ -165,6 +165,6 @@ if __name__ == "__main__":
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
     print("------- Starting Algorithm Benchmark Creation Procedure -------")
-    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client, destination_admin_api_key, destination_fqdn)
+    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client, destination_admin_api_key, destination_webapi_address)
     print("------- Workflow Created, initiating QA Test Procedure -------")
     workflow_test(entrypoint_algos, workflows)
