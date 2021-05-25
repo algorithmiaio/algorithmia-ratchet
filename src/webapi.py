@@ -46,9 +46,9 @@ def sync_environment(admin_api_key, fqdn, environment_spec_id, environment_id):
         if response.status_code == 200:
             data = response.json()
             sync_result = data['sync_result']
-            if sync_result['status'] == "succeeded":
+            if sync_result == "succeeded":
                 return True
-            elif sync_result['status'] == "failed":
+            elif "failed" in sync_result:
                 raise Exception("Syncing failed: {}".format(sync_result['message']))
             else:
                 print("still syncing...")
