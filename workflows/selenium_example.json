@@ -1,13 +1,13 @@
 {
   "test_info": {
-    "entrypoint": "hello_world",
+    "entrypoint": "hello_selenium",
     "tests": []
   },
   "algorithms": [
     {
-      "name": "hello_world",
+      "name": "hello_selenium",
       "data_files": [],
-      "environment_name": "Python 3.7",
+      "environment_name": "Selenium 3.141.x With Python 3.7",
       "test_payload": "Algorithmia"
     }
   ],

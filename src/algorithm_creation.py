@@ -1,11 +1,10 @@
 
-from src.images import *
 from src.utilities import algorithm_exists
 from uuid import uuid4
 import sh
 import os
 
-def initialize_algorithm(algoname, mode, destination_aems_master, destination_client):
+def initialize_algorithm(algoname, environment_id, destination_client):
     username = next(destination_client.dir("").list()).path
     algo = destination_client.algo(f"algo://{username}/{algoname}")
     if algorithm_exists(algo):
@@ -13,16 +12,10 @@ def initialize_algorithm(algoname, mode, destination_aems_master, destination_cl
         return algo
     else:
         print(f"algorithm {username}/{algoname} doesn't exist, creating...")
-        return create_algorithm(algo, algoname, mode, destination_aems_master)
+        return create_algorithm(algo, algoname, environment_id)
 
 
-def create_algorithm(algo, algoname, mode, aems_master):
-    if aems_master == "test":
-        environment = TEST_IMAGES[mode]
-    elif aems_master == "prod":
-        environment = PROD_IMAGES[mode]
-    else:
-        raise Exception(f"aems master '{aems_master}' not part of available set")
+def create_algorithm(algo, algoname, environment_id):
 
     algo.create(
         details={
@@ -31,7 +24,7 @@ def create_algorithm(algo, algoname, mode, aems_master):
         settings={
             "source_visibility": "closed",
             "license": "apl",
-            "algorithm_environment": environment,
+            "algorithm_environment": environment_id,
             "network_access": "full",
             "pipeline_enabled": True
         }

@@ -5,6 +5,7 @@ import tarfile
 import shutil
 import requests
 from src.utilities import algorithm_exists, call_algo
+from src.webapi import get_available_environments, get_downloadable_environments, find_environment, sync_environment
 from uuid import uuid4
 import sys
 from os import environ, path, listdir
@@ -52,7 +53,8 @@ def delete_workflows(workflows, destination_client: Client):
             algo_url = "{}/v1/algorithms/{}".format(destination_client.apiAddress, algo.path)
             if algorithm_exists(algo):
                 print(f"algorithm {username}/{algoname} exists; deleting...")
-                headers = {"Content-Type": "application/json", "Authorization": "Simple {}".format(destination_client.apiKey)}
+                headers = {"Content-Type": "application/json",
+                           "Authorization": "Simple {}".format(destination_client.apiKey)}
                 req = requests.delete(algo_url, headers=headers)
                 if req.status_code != 204:
                     raise Exception("Status code was: {}\n{}".format(req.status_code, req.text))
@@ -62,13 +64,14 @@ def delete_workflows(workflows, destination_client: Client):
                 print(f"algorithm {username}/{algoname} doesn't exist, skipping...")
 
 
-def create_workflows(workflows, source_client, destination_aems_master, destination_client):
+def create_workflows(workflows, source_client, environments, destination_client, destination_admin_key,
+                     destination_fqdn):
     entrypoints = []
     for workflow in workflows:
         print(f"----- Creating workflow {workflow['name']} -----")
         if workflow.get("run_only", False):
             workflow_suffix = "1"
-            print("----- Workflow is set to run-only, not recompilling -----")
+            print("----- Workflow is set to run-only, not recompiling -----")
         else:
             workflow_suffix = str(uuid4()).split('-')[-1]
             print(f"----- Workflow Suffix is: {workflow_suffix} -----")
@@ -80,11 +83,20 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
             print("\n")
             template_algorithm_name = algorithm['name']
             new_algorithm_name = f"{template_algorithm_name}_{workflow_suffix}"
-            algorithm_pairs.append(( template_algorithm_name, new_algorithm_name))
+            algorithm_pairs.append((template_algorithm_name, new_algorithm_name))
             remote_code_path = algorithm.get("code", None)
-            language = algorithm['language']
+            language = algorithm['environment_name']
             data_file_paths = algorithm['data_files']
             test_payload = algorithm['test_payload']
+            env_data = find_environment(language, environments)
+            if "id" not in env_data:
+                global_environments = get_downloadable_environments(destination_admin_key, destination_fqdn)
+                remote_env_data = find_environment(language, global_environments)
+                sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'], remote_env_data['id'])
+                env_data = find_environment(language, environments)
+                if "id" not in env_data:
+                    raise Exception("syncing failed, environment not found")
+
             artifact_path = f"{WORKING_DIR}/source"
             if remote_code_path:
                 print("downloading code...")
@@ -97,11 +109,12 @@ def create_workflows(workflows, source_client, destination_aems_master, destinat
                 find_algo(template_algorithm_name, artifact_path)
 
             print("initializing algorithm...")
-            algo_object = initialize_algorithm(new_algorithm_name, language, destination_aems_master, destination_client)
+            algo_object = initialize_algorithm(new_algorithm_name, env_data['id'], destination_client)
             print("migrating datafiles...")
             migrate_datafiles(algo_object, data_file_paths, source_client, destination_client, WORKING_DIR)
             print("updating algorithm source...")
-            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR, artifact_path)
+            update_algorithm(algo_object, template_algorithm_name, algorithm_pairs, destination_client, WORKING_DIR,
+                             artifact_path)
             print("testing algorithm...")
             payload = template_payload(test_payload, new_algorithm_name)
             algorithm_test(algo_object, payload)
@@ -129,12 +142,14 @@ def workflow_test(algorithms, workflows):
 
 
 if __name__ == "__main__":
-    source_api_key = environ.get("SOURCE_API_KEY")
+    source_api_key = environ.get("RATCHET_API_KEY")
     source_ca_cert = environ.get("SOURCE_CA_CERT", None)
-    destination_api_address = environ.get("DESTINATION_API_ADDRESS")
-    destination_api_key = environ.get("DESTINATION_API_KEY")
+    destination_fqdn = environ.get("FQDN")
+    destination_api_key = environ.get("API_KEY")
+    destination_admin_api_key = environ.get("ADMIN_API_KEY")
     destination_ca_cert = environ.get("DESTINATION_CA_CERT", None)
-    destination_aems_master = environ.get("DESTINATION_AEMS_MASTER", "prod")
+    destination_webapi_address = "https://{}".format(destination_fqdn)
+    destination_api_address = "https://api.{}".format(destination_fqdn)
     if len(sys.argv) > 1:
         workflow_names = [str(sys.argv[1])]
     else:
@@ -142,6 +157,8 @@ if __name__ == "__main__":
         for file in listdir("workflows"):
             if file.endswith(".json"):
                 workflow_names.append(file.split(".json")[0])
+
+    environments = get_available_environments(destination_admin_api_key, destination_webapi_address)
 
     workflows = get_workflows(workflow_names)
     if "source_info" in workflows[0]:
@@ -153,6 +170,7 @@ if __name__ == "__main__":
     destination_client = Algorithmia.client(api_key=destination_api_key, api_address=destination_api_address,
                                             ca_cert=destination_ca_cert)
     print("------- Starting Algorithm Benchmark Creation Procedure -------")
-    entrypoint_algos = create_workflows(workflows, source_client, destination_aems_master, destination_client)
+    entrypoint_algos = create_workflows(workflows, source_client, environments, destination_client,
+                                        destination_admin_api_key, destination_webapi_address)
     print("------- Workflow Created, initiating QA Test Procedure -------")
     workflow_test(entrypoint_algos, workflows)
