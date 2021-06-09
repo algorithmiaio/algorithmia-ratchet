@@ -8,6 +8,7 @@ from src.utilities import algorithm_exists, call_algo
 from src.webapi import get_available_environments, get_downloadable_environments, find_environment, sync_environment
 from uuid import uuid4
 import sys
+from time import sleep
 from os import environ, path, listdir
 from src.algorithm_creation import initialize_algorithm, migrate_datafiles, update_algorithm
 from src.algorithm_testing import algorithm_test, algorithm_publish
@@ -93,6 +94,7 @@ def create_workflows(workflows, source_client, environments, destination_client,
                 global_environments = get_downloadable_environments(destination_admin_key, destination_fqdn)
                 remote_env_data = find_environment(language, global_environments)
                 sync_environment(destination_admin_key, destination_fqdn, remote_env_data['spec_id'], remote_env_data['id'])
+                sleep(5)
                 env_data = find_environment(language, environments)
                 if "id" not in env_data:
                     raise Exception("syncing failed, environment not found")

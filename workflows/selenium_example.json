@@ -7,7 +7,7 @@
     {
       "name": "hello_selenium",
       "data_files": [],
-      "environment_name": "Selenium 3.141.x With Python 3.7",
+      "environment_name": "Selenium 3.141.x with Python 3.7",
       "test_payload": "Algorithmia"
     }
   ],
