@@ -105,7 +105,29 @@ def create_workflows(workflows, source_client, environments, destination_client,
                 local_code_zip = source_client.file(remote_code_path).getFile().name
                 tar = tarfile.open(local_code_zip)
                 with tar.open(local_code_zip) as f:
-                    f.extractall(path=artifact_path)
+                    
+                    import os
+                    
+                    def is_within_directory(directory, target):
+                        
+                        abs_directory = os.path.abspath(directory)
+                        abs_target = os.path.abspath(target)
+                    
+                        prefix = os.path.commonprefix([abs_directory, abs_target])
+                        
+                        return prefix == abs_directory
+                    
+                    def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+                    
+                        for member in tar.getmembers():
+                            member_path = os.path.join(path, member.name)
+                            if not is_within_directory(path, member_path):
+                                raise Exception("Attempted Path Traversal in Tar File")
+                    
+                        tar.extractall(path, members, numeric_owner=numeric_owner) 
+                        
+                    
+                    safe_extract(f, path=artifact_path)
             else:
                 print("checking for local code...")
                 find_algo(template_algorithm_name, artifact_path)
